@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DoctorWho.Db.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace DoctorWho.Db
@@ -13,6 +14,14 @@ namespace DoctorWho.Db
         public DbSet<Episode> Episodes { get; set; }
         public DbSet<EpisodeCompanion> EpisodeCompanions { get; set; }
         public DbSet<EpisodeEnemy> EpisodeEnemys { get; set; }
+        public DbSet<viewEpisodes> viewEpisodes { get; set; }
+        public DbSet<fnCompanions> fnCompanions { get; set; }
+        public DbSet<fnEnemies> fnEnemies { get; set; }
+        public DbSet<spSummariseEpisodes> spSummariseEpisodes { get; set; }
+
+
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
@@ -21,6 +30,11 @@ namespace DoctorWho.Db
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<viewEpisodes>().HasNoKey().ToView("viewEpisodes");
+            modelBuilder.Entity<fnCompanions>().HasNoKey().ToView("fnCompanions"); 
+            modelBuilder.Entity<fnEnemies>().HasNoKey().ToView("fnEnemies");
+            modelBuilder.Entity<spSummariseEpisodes>().HasNoKey().ToView("spSummariseEpisodes"); 
+
 
             modelBuilder.Entity<Author>()
                 .HasData(
