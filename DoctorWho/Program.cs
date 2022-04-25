@@ -16,11 +16,16 @@ namespace DoctorWho
             var Companions = fnCompanions();
             var Enemies = fnEnemies();
             var Episodes = viewEpisodes();
+
+            var Doctors = GetAllDoctors();
+            var enemy = GetEnemyById(1);
+            var companion = GetCompanionById(1);
+
         }
         private static List<spSummariseEpisodes> spSummariseEpisodes()
         {
             return _context.spSummariseEpisodes.FromSqlRaw("EXEC spSummariseEpisodes;").ToList();
-        }
+        } 
         private static List<fnCompanions> fnCompanions()
         {
             return _context.fnCompanions.FromSqlRaw("SELECT * from dbo.fnCompanions(1);").ToList();
@@ -33,44 +38,44 @@ namespace DoctorWho
         {
             return _context.viewEpisodes.FromSqlRaw("select * from viewEpisodes;").ToList();
         }
-        public void CreateAuthors(string AuthorName)
+        private static void CreateAuthors(string AuthorName)
         {
             var Author = new Author { AuthorName = AuthorName };
             _context.Authors.Add(Author);
             _context.SaveChanges();
         }
-        public void UpdateAuthors(int AuthorId)
+        private static void UpdateAuthors(int AuthorId)
         {
             var Author = _context.Authors.Find(AuthorId);
             Author.AuthorName += "Kayed";
             _context.SaveChanges();
         }
-        public void DeleteAuthors(int AuthorId)
+        private static void DeleteAuthors(int AuthorId)
         {
             var Author = _context.Authors.Find(AuthorId);
             _context.Authors.Remove(Author);
             _context.SaveChanges();
         }
-        public void CreateCompanions(string CompanionName, string WhoPlayed)
+        private static void CreateCompanions(string CompanionName, string WhoPlayed)
         {
             var Companion = new Companion { CompanionName = CompanionName, WhoPlayed = WhoPlayed };
             _context.Companions.Add(Companion);
             _context.SaveChanges();
         }
-        public void UpdateCompanions(int CompanionId)
+        private static void UpdateCompanions(int CompanionId)
         {
             var Companion = _context.Companions.Find(CompanionId);
             Companion.CompanionName += "Kayed";
             _context.SaveChanges();
         }
-        public void DeleteCompanions(int CompanionId)
+        private static void DeleteCompanions(int CompanionId)
         {
             var Companion = _context.Companions.Find(CompanionId);
             _context.Companions.Remove(Companion);
             _context.SaveChanges();
         }
 
-        public void CreateDoctors(int DoctorNumber, string DoctorName,
+        private static void CreateDoctors(int DoctorNumber, string DoctorName,
                                   DateTime BirthDate, DateTime FirstEpisodeDate,
                                   DateTime LastEpisodeDate)
         {
@@ -85,40 +90,40 @@ namespace DoctorWho
             _context.Doctors.Add(Doctor);
             _context.SaveChanges();
         }
-        public void UpdateDoctors(int DoctorId)
+        private static void UpdateDoctors(int DoctorId)
         {
             var Doctor = _context.Doctors.Find(DoctorId);
             Doctor.DoctorName += "Kayed";
             _context.SaveChanges();
         }
-        public void DeleteDoctors(int DoctorId)
+        private static void DeleteDoctors(int DoctorId)
         {
             var Doctor = _context.Doctors.Find(DoctorId);
             _context.Doctors.Remove(Doctor);
             _context.SaveChanges();
         }
-        public void CreateEnemys(string EnemyName, string EnemyDescription)
+        private static void CreateEnemys(string EnemyName, string EnemyDescription)
         {
             var Enemy = new Enemy { EnemyName = EnemyName, EnemyDescription = EnemyDescription };
             _context.Enemys.Add(Enemy);
             _context.SaveChanges();
         }
-        public void UpdateEnemys(int EnemyId)
+        private static void UpdateEnemys(int EnemyId)
         {
             var Enemy = _context.Enemys.Find(EnemyId);
             Enemy.EnemyName += "Kayed";
             _context.SaveChanges();
         }
-        public void DeleteEnemys(int EnemyId)
+        private static void DeleteEnemys(int EnemyId)
         {
             var Enemy = _context.Enemys.Find(EnemyId);
             _context.Enemys.Remove(Enemy);
             _context.SaveChanges();
         }
-        public void CreateEpisodes(int SeriesNumber, int EpisodeNumber,
+        private static void CreateEpisodes(int SeriesNumber, int EpisodeNumber,
                                    string EpisodeType, string Title,
                                    DateTime EpisodeDate, int AuthorId,
-                                   int DoctorId , string Nots)
+                                   int DoctorId, string Nots)
         {
             var Episode = new Episode
             {
@@ -134,17 +139,44 @@ namespace DoctorWho
             _context.Episodes.Add(Episode);
             _context.SaveChanges();
         }
-        public void UpdateEpisodes(int EpisodeId)
+        private static void UpdateEpisodes(int EpisodeId)
         {
             var Episode = _context.Episodes.Find(EpisodeId);
             Episode.EpisodeType += "Kayed";
             _context.SaveChanges();
         }
-        public void DeleteEpisodes(int EpisodeId)
+        private static void DeleteEpisodes(int EpisodeId)
         {
             var Episode = _context.Episodes.Find(EpisodeId);
             _context.Episodes.Remove(Episode);
             _context.SaveChanges();
         }
+
+        private static void AddCompanionToEpisode(int EpisodeId, int CompanionId)
+        {
+            var EpisodeCompanion = new EpisodeCompanion { EpisodeId = EpisodeId, CompanionId = CompanionId };
+            _context.Add(EpisodeCompanion);
+            _context.SaveChanges();
+        }
+        private static void AddEnemyToEpisode(int EpisodeId, int EnemyId)
+        {
+            var EpisodeEnemy = new EpisodeEnemy { EpisodeId = EpisodeId, EnemyId = EnemyId };
+            _context.Add(EpisodeEnemy);
+            _context.SaveChanges();
+        }
+
+        private static List<Doctor> GetAllDoctors()
+        {
+            return _context.Doctors.ToList();
+        }
+        private static Enemy GetEnemyById(int EnemyId)
+        {
+            return _context.Enemys.Find(EnemyId);
+        }
+        private static Companion GetCompanionById(int CompanionId)
+        {
+            return _context.Companions.Find(CompanionId);
+        }
+
     }
 }
